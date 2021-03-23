@@ -2,6 +2,9 @@ import XMonad
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
 import XMonad.Hooks.ManageDocks
+import XMonad.Util.Dzen
+import Graphics.X11.ExtraTypes.XF86
+import XMonad.Util.EZConfig
 
 import Data.Monoid
 
@@ -9,6 +12,7 @@ import System.Exit
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
+
 
 myTerminal      = "gnome-terminal"
 
@@ -24,7 +28,7 @@ myModMask       = mod4Mask
 
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
 
-myNormalBorderColor  = "#dddddd"
+myNormalBorderColor  = "#101010"
 myFocusedBorderColor = "#ff0000"
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
@@ -35,7 +39,20 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_q     ), kill)
     , ((modm,               xK_space ), sendMessage NextLayout)
     , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
-    , ((modm,               xK_n     ), refresh)
+
+    -- Multimedia Keys
+    
+    , ((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master 5%+ unmute")
+    , ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 5%- unmute")
+    , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle")
+
+    , ((0, xF86XK_MonBrightnessUp), spawn "lux -a 10%")
+    , ((0, xF86XK_MonBrightnessDown), spawn "lux -s 10%")
+   
+    , ((0, xF86XK_AudioPlay), spawn "playerctl play-pause")
+    , ((0, xF86XK_AudioNext), spawn "playerctl next")
+    , ((0, xF86XK_AudioPrev), spawn "playerctl previous")    
+
     , ((modm,               xK_Tab   ), windows W.focusDown)
     , ((modm,               xK_Right ), windows W.focusDown)
     , ((modm,               xK_Left  ), windows W.focusUp  )
@@ -43,7 +60,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_Right ), windows W.swapDown  )
     , ((modm .|. shiftMask, xK_Left  ), windows W.swapUp    )
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
-
     -- Toggle the status bar gap
     -- Use this binding with avoidStruts from Hooks.ManageDocks.
     -- See also the statusBar function from Hooks.DynamicLog.
@@ -73,6 +89,8 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
                                        >> windows W.shiftMaster))
     ]
+
+
 
 myLayout = avoidStruts $ tiled ||| Mirror tiled ||| Full
   where
