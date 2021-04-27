@@ -1,0 +1,59 @@
+Config { font = "xft:monospace-8"
+       , bgColor = "black"
+       , fgColor = "grey"
+       , position = Top
+       , lowerOnStart = True
+       , commands = [
+       		      Run Date "<fc=#e85d5e>%d %m %Y %H:%M:%S</fc>" "date" 10
+		    , Run Battery
+		                 [ "--template" , "bat:<acstatus>"
+                                 , "--Low"      , "20"        -- units: %
+                                 , "--High"     , "80"        -- units: %
+                                 , "--low"      , "#ff0600"
+                                 , "--normal"   , "#e85d5e"
+                                 , "--high"     , "#65b860"
+
+                                 , "--" -- battery specific options
+                                       -- discharging status
+                                       , "-o"	, "<left>%"
+                                       -- AC "on" status
+                                       , "-O"	, "<fc=#65b860><left>%</fc>"
+                                       -- charged status
+                                       , "-i"	, "<fc=#65b860>full</fc>"
+                                 ] 50
+		    , Run Memory 
+		                 [ "--template" , "mem:<usedratio>%"
+				 , "--High" , "8192"
+				 , "--Low" , "4096" 
+				 , "--high" , "#ff0600" 
+				 , "--low" , "#65b860" 
+				 ] 10
+
+                    , Run Swap 
+		    		[ "--template" , "swap:<usedratio>%"
+		    		, "--High" , "1024" 
+		    		, "--Low" , "512" 
+		    		, "--high" , "#ff0600" 
+		    		, "--low","#65b860"
+		    		] 10
+		    , Run MultiCpu 
+		    		   [ "--template" , "cpu:<total0>%<total1>%<total2>%<total3>%"
+				   , "--Low" , "30"
+				   , "--High" , "60"
+				   , "--high" , "#ff0600"
+				   , "--low" , "#65b860"
+				   , "-n" , "#FFFFCC"
+				   , "-w" , "2"
+				   ] 10
+		    , Run Wireless "wlo1"
+		                         [ "-t" , "<ssid> <qualityvbar>" 
+					 , "--Low" , "30"
+                                   	 , "--High" , "60"
+                                   	 , "--high" , "#ff0600"
+                                   	 , "--low" , "#65b860"
+					 ] 10
+		    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " %memory% %swap% | %multicpu% }{ %wlo1wi% | %battery% | %date% "
+       }
