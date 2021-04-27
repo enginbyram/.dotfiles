@@ -1,2 +1,3 @@
-# xmonad configs
-not much is happening here, only backups.
+## .dotfiles
+
+this repo contains my xmonad.hs, and xmobarrc.
